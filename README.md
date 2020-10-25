@@ -56,7 +56,18 @@ sudo apt install libhidapi-libusb
 
 # Usage
 
+```
+Usage: keyboard_light [-h] [-c COLOR] [-w WAVE] [-s SPEED]
 
+Supply at least one of the options [-c|w|s].
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c COLOR, --color COLOR
+                        Select a single color for all keys. Use #RRGGBB pattern
+  -w WAVE, --wave WAVE  Select 4 to 7 colors to generate a wave light pattern. Use a comma separated list with #RRGGBB colors
+  -s SPEED, --speed SPEED Speed of the effect transitions. 1 (fast) to 5 (slow)
+```
 
 # Contributions
 
