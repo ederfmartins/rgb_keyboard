@@ -36,12 +36,13 @@ class Color:
     def choices():
         return Color._COLORS.keys()
 
-
 class Pattern:
     _PATTERN = {
         "solid":            0x01,
         "breathing":        0x02,
         "wave":             0x03,
+        "blinking":         0x12,
+        "flow":             0x13,
         # todo paterns have not been verified
         # copied from - https://github.com/rodgomesc/avell-unofficial-control-center working driver for revision 0.03.
         # "random":           0x04,
