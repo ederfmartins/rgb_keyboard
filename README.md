@@ -57,16 +57,26 @@ sudo apt install libhidapi-libusb
 # Usage
 
 ```
-Usage: keyboard_light [-h] [-c COLOR] [-w WAVE] [-s SPEED]
+usage: keyboard_light [-h] [-c COLORS] [-p {solid,breathing,wave,blinking,flow}] [-s SPEED] [-i INTENSITY] [-r]
 
-Supply at least one of the options [-c|w|s].
+Supply zero or more options [-c|s|i|p|r].
+        Examples:
+            keyboard_light
+            keyboard_light -p solid
+            keyboard_light -cred,#FF2200,#FF4400,blue -p wave -i 32 -s 8
 
 optional arguments:
   -h, --help            show this help message and exit
-  -c COLOR, --color COLOR
-                        Select a single color for all keys. Use #RRGGBB pattern
-  -w WAVE, --wave WAVE  Select 4 to 7 colors to generate a wave light pattern. Use a comma separated list with #RRGGBB colors
-  -s SPEED, --speed SPEED Speed of the effect transitions. 1 (fast) to 5 (slow)
+  -c COLORS, --colors COLORS
+                        Select colors to generate a light pattern. Use a comma separated list with #RRGGBB colors or {red,green,blue,teal,purple,pink,yellow,white,orange,olive,maroon,brown,gray,skyblue,navy,crimson,darkgreen,lightgreen,gold,violet}. (default: red,white,blue)
+  -p {solid,breathing,wave,blinking,flow}, --pattern {solid,breathing,wave,blinking,flow}
+                        Pattern of the effect. (default: breathing)
+  -s SPEED, --speed SPEED
+                        Speed of the effect transitions. 1 (fast) to 8 (slow), 0  is no transition. (default: 5)
+  -i INTENSITY, --intensity INTENSITY
+                        Intensity of the effect. 0 (low) to 32 (high). (default: 16)
+  -r, --no_root_privileges
+                        Set argument if no root privileges should be requested. (default: False)
 ```
 
 # Contributions

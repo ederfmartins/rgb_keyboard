@@ -4,64 +4,57 @@ from elevate import elevate
 import os
 
 from rgb_keyboard.driver import KeyboardControler
+from rgb_keyboard.arguments import Color, Pattern, UltimateHelpFormatter
+
 
 parser = argparse.ArgumentParser(
-    description=textwrap.dedent("""Supply at least one of the options [-c|w|s]."""),
-    formatter_class=argparse.RawDescriptionHelpFormatter
+    description="""Supply zero or more options [-c|s|i|p|r].
+        Examples:
+            keyboard_light
+            keyboard_light -p solid
+            keyboard_light -cred,#FF2200,#FF4400,blue -p wave -i 32 -s 8""",
+    formatter_class=UltimateHelpFormatter
 )
 
-parser.add_argument("-c", "--color", help="Select a single color for all keys. Use #RRGGBB pattern")
-parser.add_argument("-w", "--wave", help="Select 4 to 7 colors to generate a wave light pattern. Use a comma separated list with #RRGGBB colors")
-parser.add_argument("-s", "--speed", help="Speed of the effect transitions. 1 (fast) to 5 (slow)")
 
-def parse_color(color):
-    colors = {
-        "red": "#FF0000",
-        "green": "#00FF00",
-        "blue": "#0000FF",
-        "teal": "#00FFFF",
-        "purple": "#FF00FF",
-        "pink": "#FF0077",
-        "yellow": "#FF7700",
-        "white": "#FFFFFF",
-        "orange": "#FF1C00",
-        "olive": "#808000",
-        "maroon": "#800000",
-        "brown": "#A52A2A",
-        "gray": "#808080",
-        "skyblue": "#87CEEB",
-        "navy": "#000080",
-        "crimson": "#DC143C",
-        "darkgreen": "#006400",
-        "lightgreen": "#90EE90",
-        "gold": "#FFD700",
-        "violet": "#EE82EE"
-    }
-    return colors.get(color, color)
-
-
-def parse_wave(wave_colors):
-    wave_colors = [parse_color(color) for color in wave_colors.split(",")]
-    return ",".join(wave_colors)
-
+parser.add_argument("-c", "--colors",
+                    help=f"Select colors to generate a light pattern. "
+                         f"Use a comma separated list with #RRGGBB colors or {{{','.join(Color.choices())}}}.",
+                    default="red,white,blue")
+parser.add_argument("-p", "--pattern",
+                    help="Pattern of the effect.",
+                    default="breathing",
+                    choices=Pattern.choices())
+parser.add_argument("-s", "--speed",
+                    help="Speed of the effect transitions. 1 (fast) to 8 (slow), 0  is no transition.",
+                    default=5, type=int)
+parser.add_argument("-i", "--intensity",
+                    help="Intensity of the effect. 0 (low) to 32 (high).",
+                    default=16, type=int)
+parser.add_argument("-r", "--no_root_privileges", dest='root', action='store_true',
+                    help="Set argument if no root privileges should be requested.",
+                    default=False)
 
 def main():
     parsed = parser.parse_args()
-    if parsed.color:
-        if not os.geteuid() == 0:
-            elevate()
-        controler = KeyboardControler()
-        controler.solid_color(parse_color(parsed.color))
-    elif parsed.wave:
-        wave = "#ff0000,#00b400,#0000ff,#ff00ff,#0000FF,#00B4FF,#FF00FF"
-        if len(parsed.wave.split(",")) >= 4:
-            wave = parse_wave(parsed.wave)
-        speed = parsed.speed or 5
-        if not os.geteuid() == 0:
-            elevate()
-        controler = KeyboardControler()
-        controler.wave_color(wave, speed)
+    colors = [Color(color) for color in parsed.colors.split(",")]
+    colors = _expand_colors_to(colors, 7)
+    pattern = Pattern(parsed.pattern)
 
+    if not os.geteuid() == 0 and not parsed.root:
+        elevate()
+
+    KeyboardControler().send_args(colors, pattern, parsed.intensity, parsed.speed)
+
+def _expand_colors_to(colors: list[Color], to: int):
+    # repeat colors until there are amount of colors
+    number_of_suplied_colors = len(colors)
+    number_of_expanded_colors = 0
+    expanded_colors = []
+    while len(expanded_colors) < to:
+        expanded_colors.append(colors[number_of_expanded_colors % number_of_suplied_colors])
+        number_of_expanded_colors += 1
+    return expanded_colors
 
 if __name__ == "__main__":
     main()
