@@ -1,3 +1,5 @@
+import argparse
+
 class Color:
 
     _COLORS = {
@@ -59,3 +61,8 @@ class Pattern:
     def choices():
         return Pattern._PATTERN.keys()
 
+
+class UltimateHelpFormatter(
+    argparse.RawTextHelpFormatter, argparse.ArgumentDefaultsHelpFormatter
+):
+    pass

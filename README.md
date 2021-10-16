@@ -60,22 +60,23 @@ sudo apt install libhidapi-libusb
 usage: keyboard_light [-h] [-c COLORS] [-p {solid,breathing,wave}] [-s SPEED] [-i INTENSITY] [-r]
 
 Supply zero or more options [-c|s|i|p|r].
-            Exsamples:
-                keyboard_light
-                keyboard_light -p solid
-                keyboard_light -cred,#FF2200,#FF4400,blue -p wave -i 32 -s 8
+        Exsamples:
+            keyboard_light
+            keyboard_light -p solid
+            keyboard_light -cred,#FF2200,#FF4400,blue -p wave -i 32 -s 8
 
 optional arguments:
   -h, --help            show this help message and exit
   -c COLORS, --colors COLORS
-                        Select colors to generate a light pattern. Use a comma separated list with #RRGGBB colors or {red,green,blue,teal,purple,pink,yellow,white,orange,olive,maroon,brown,gray,skyblue,navy,crimson,darkgreen,lightgreen,gold,violet}.
+                        Select colors to generate a light pattern. Use a comma separated list with #RRGGBB colors or {red,green,blue,teal,purple,pink,yellow,white,orange,olive,maroon,brown,gray,skyblue,navy,crimson,darkgreen,lightgreen,gold,violet}. (default: red,white,blue)
   -p {solid,breathing,wave}, --pattern {solid,breathing,wave}
-                        Pattern of the effect.
+                        Pattern of the effect. (default: breathing)
   -s SPEED, --speed SPEED
-                        Speed of the effect transitions. 1 (fast) to 8 (slow), 0 is no transition.
+                        Speed of the effect transitions. 1 (fast) to 8 (slow), 0  is no transition. (default: 5)
   -i INTENSITY, --intensity INTENSITY
-                        Intensity of the effect. 0 (low) to 32 (high).
-  -r, --no-root         Do not use root privileges.
+                        Intensity of the effect. 0 (low) to 32 (high). (default: 16)
+  -r, --no_root_privileges
+                        Set argument if no root privileges should be requested. (default: False)
 ```
 
 # Contributions

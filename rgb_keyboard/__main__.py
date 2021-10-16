@@ -4,19 +4,18 @@ from elevate import elevate
 import os
 
 from rgb_keyboard.driver import KeyboardControler
-from rgb_keyboard.arguments import Color, Pattern
+from rgb_keyboard.arguments import Color, Pattern, UltimateHelpFormatter
 
 
 parser = argparse.ArgumentParser(
-    description=textwrap.dedent(
-        """Supply zero or more options [-c|s|i|p|r].
-            Exsamples:
-                keyboard_light
-                keyboard_light -p solid
-                keyboard_light -cred,#FF2200,#FF4400,blue -p wave -i 32 -s 8
-        """),
-    formatter_class=argparse.RawDescriptionHelpFormatter
+    description="""Supply zero or more options [-c|s|i|p|r].
+        Examples:
+            keyboard_light
+            keyboard_light -p solid
+            keyboard_light -cred,#FF2200,#FF4400,blue -p wave -i 32 -s 8""",
+    formatter_class=UltimateHelpFormatter
 )
+
 
 parser.add_argument("-c", "--colors",
                     help=f"Select colors to generate a light pattern. "
@@ -32,9 +31,9 @@ parser.add_argument("-s", "--speed",
 parser.add_argument("-i", "--intensity",
                     help="Intensity of the effect. 0 (low) to 32 (high).",
                     default=16, type=int)
-parser.add_argument("-r", "--no-root", dest='root', action='store_false',
-                    help="Do not use root privileges.",
-                    default=True)
+parser.add_argument("-r", "--no_root_privileges", dest='root', action='store_true',
+                    help="Set argument if no root privileges should be requested.",
+                    default=False)
 
 def main():
     parsed = parser.parse_args()
@@ -42,7 +41,7 @@ def main():
     colors = _expand_colors_to(colors, 7)
     pattern = Pattern(parsed.pattern)
 
-    if not os.geteuid() == 0 and parsed.root:
+    if not os.geteuid() == 0 and not parsed.root:
         elevate()
 
     KeyboardControler().send_args(colors, pattern, parsed.intensity, parsed.speed)
