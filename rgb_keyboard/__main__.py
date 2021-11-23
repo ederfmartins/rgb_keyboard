@@ -5,6 +5,7 @@ import os
 
 from rgb_keyboard.driver import KeyboardControler
 from rgb_keyboard.arguments import Color, Pattern, UltimateHelpFormatter
+from typing import List
 
 
 parser = argparse.ArgumentParser(
@@ -18,8 +19,8 @@ parser = argparse.ArgumentParser(
 
 
 parser.add_argument("-c", "--colors",
-                    help=f"Select colors to generate a light pattern. "
-                         f"Use a comma separated list with #RRGGBB colors or {{{','.join(Color.choices())}}}.",
+                    help="Select colors to generate a light pattern. " \
+                    "Use a comma separated list with #RRGGBB colors or {}.".format(','.join(Color.choices())),
                     default="red,white,blue")
 parser.add_argument("-p", "--pattern",
                     help="Pattern of the effect.",
@@ -46,7 +47,7 @@ def main():
 
     KeyboardControler().send_args(colors, pattern, parsed.intensity, parsed.speed)
 
-def _expand_colors_to(colors: list[Color], to: int):
+def _expand_colors_to(colors: List[Color], to: int):
     # repeat colors until there are amount of colors
     number_of_suplied_colors = len(colors)
     number_of_expanded_colors = 0

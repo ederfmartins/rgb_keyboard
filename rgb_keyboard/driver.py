@@ -7,6 +7,7 @@ import os
 from ctypes import create_string_buffer
 from rgb_keyboard.arguments import Color, Pattern
 import hid
+from typing import List
 
 
 class KeyboardControler:
@@ -20,7 +21,7 @@ class KeyboardControler:
     pattern_flag_prefix = [0x08, 0x02]
 
 
-    def send_args(self, colors: list[Color], pattern: Pattern, intensity=0x16, speed=0x05):
+    def send_args(self, colors: List[Color], pattern: Pattern, intensity=0x16, speed=0x05):
         rgbs = [color.rgb for color in colors]
         cmds = [
             self.color_flag_prefix + [region] + rgb + self.color_flag_suffix
