@@ -79,6 +79,24 @@ optional arguments:
                         Set argument if no root privileges should be requested. (default: False)
 ```
 
+# Throbleshooting
+
+On some Ubuntu distributions it was reported some errors on the driver due to permission issues. If even running as root your driver fails with this exception:
+
+```
+File "/usr/local/lib/python3.8/dist-packages/hid-1.0.4-py3.8.egg/hid/init.py", line 130, in init
+raise HIDException('unable to open device')
+hid.HIDException: unable to open device
+```
+you could be in this situation. As workaroud, you should add a udev rule to force the permission to your user (https://askubuntu.com/questions/15570/configure-udev-to-change-permissions-on-usb-hid-device) to the device that your keyboard is connected (usb adapter). More preciselly, in `/etc/udev/rules.d` add a new conf file, like `50-usb-rgbkeyboard.conf` with the following content:
+
+```  
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0x048d", ATTR{idProduct}=="0xce00", MODE="0666"
+```
+
+For more details see [#4](/../../issues/4).
+
+
 # Contributions
 
 Contributions of any kind are welcome. Please follow pep-8 coding style guides.
